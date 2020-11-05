@@ -1,14 +1,14 @@
 import models.Doc;
 import org.apache.commons.io.FilenameUtils;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import services.DocService;
+import utils.HibernateSessionFactoryUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.DosFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Main {
         List<File> listOfFiles = new ArrayList<>();
         Doc doc = new Doc();
 
-        try {
+        /*try {
             //search files
             for (File i : Doc.listFile(file, listOfFiles)) {
                 //System.out.println(i);
@@ -31,14 +31,14 @@ public class Main {
                 doc.setDate(path); //date
                 doc.setAttributes(path); //attributes
                 doc.setAccessibility(path); //accessibility
-
                 //write to DB
                 docService.saveDoc(doc);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
 
-        String
+        System.out.println(docService.select(doc));
+
     }
 }

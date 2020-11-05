@@ -3,6 +3,11 @@ package services;
 import dao.DocDao;
 import lombok.NoArgsConstructor;
 import models.Doc;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import utils.HibernateSessionFactoryUtil;
+
+import java.util.List;
 
 @NoArgsConstructor
 public class DocService {
@@ -22,6 +27,10 @@ public class DocService {
 
     public void updateDoc(Doc doc) {
         docsDao.update(doc);
+    }
+
+    public List select(Doc doc) {
+        return docsDao.select(doc);
     }
 
 }

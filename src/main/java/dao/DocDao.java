@@ -3,7 +3,10 @@ package dao;
 import models.Doc;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import utils.HibernateSessionFactoryUtil;
+
+import java.util.List;
 
 public class DocDao implements Dao{
     public Doc findById(int id) {
@@ -32,5 +35,10 @@ public class DocDao implements Dao{
         session.delete(doc);
         tx1.commit();
         session.close();
+    }
+
+    public static List<Long> select(Doc doc) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        return session.createQuery("SELECT min( D.size ) from Doc D", Long.class).getResultList();
     }
 }
