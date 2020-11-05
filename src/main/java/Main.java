@@ -38,7 +38,7 @@ public class Main {
             ex.printStackTrace();
         }*/
 
-        System.out.println(docService.select(doc));
+        docService.select(doc);
 
     }
 }
