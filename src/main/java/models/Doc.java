@@ -84,4 +84,12 @@ public class Doc implements Serializable {
         }
         return list;
     }
+
+    @Override
+    public String toString() {
+        return "Doc{" +
+                "id=" + id +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }

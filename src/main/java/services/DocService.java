@@ -29,8 +29,8 @@ public class DocService {
         docsDao.update(doc);
     }
 
-    public void select(Doc doc) {
+    /*public void select(Doc doc) {
         docsDao.select(doc);
-    }
+    }*/
 
 }

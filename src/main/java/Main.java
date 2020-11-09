@@ -1,19 +1,18 @@
 import models.Doc;
 import org.apache.commons.io.FilenameUtils;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import services.DocService;
-import utils.HibernateSessionFactoryUtil;
-
+import services.Query;
+import utils.DBConnection;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         DocService docService = new DocService();
         File file = new File("F:\\100CANON\\");
         List<File> listOfFiles = new ArrayList<>();
@@ -27,7 +26,14 @@ public class Main {
                 Path path = Paths.get(i.toString());
                 doc.setPath(path.toString()); //path
                 doc.setSize(i.length()); //size
-                doc.setType(FilenameUtils.getExtension(doc.getPath())); //type
+                //type
+                String fileType = FilenameUtils.getExtension(doc.getPath());
+                if (fileType.equals("")) {
+                    doc.setType("folder");
+                } else {
+                    doc.setType(fileType);
+                }
+
                 doc.setDate(path); //date
                 doc.setAttributes(path); //attributes
                 doc.setAccessibility(path); //accessibility
@@ -38,7 +44,12 @@ public class Main {
             ex.printStackTrace();
         }*/
 
-        docService.select(doc);
+        //create DB
+        Connection connection = DBConnection.connect();
+        //DBConnection.createDB("files", connection);
+        Query.createStatement(connection,23);
 
+
+        DBConnection.closeConnect(connection);
     }
 }
