@@ -14,6 +14,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributes;
 import java.util.List;
 
+/**
+ * Объект Doc = File, т.к. класс File уже используется Java
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -54,6 +57,11 @@ public class Doc implements Serializable {
         this.executable = executable;
     }
 
+    /**
+     * установка атрибутов файла
+     * @param path расположение файла/папки
+     * @throws IOException
+     */
     public void setAttributes(Path path) throws IOException {
         DosFileAttributes attr = Files.readAttributes(path, DosFileAttributes.class);
         this.setHidden(attr.isHidden());
@@ -61,17 +69,33 @@ public class Doc implements Serializable {
         this.setSystem(attr.isSystem());
     }
 
+    /**
+     * установка даты создания файла
+     * @param path расположение файла/папки
+     * @throws IOException
+     */
     public void setDate(Path path) throws IOException {
         BasicFileAttributes date = Files.readAttributes(path, BasicFileAttributes.class);
         this.setCreated(date.creationTime().toString());
     }
 
-    public void setAccessibility(Path path){
+    /**
+     * установка атрибута доступности файла
+     * @param path расположение файла/папки
+     */
+    public void setAccessibility(Path path) {
         this.setReadable(Files.isReadable(path));
         this.setWritable(Files.isWritable(path));
         this.setExecutable(Files.isExecutable(path));
     }
 
+    /**
+     * Поиск файлов и каталогов в заданной директории (root)
+     *
+     * @param root каталог поиска
+     * @param list список для добавления в него путей файлов и директорий
+     * @return List<File> список найденных файлов и каталогов
+     */
     public static List<File> listFile(File root, List<File> list) {
         File[] files = root.listFiles();
         if (files != null) {

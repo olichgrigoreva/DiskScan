@@ -1,7 +1,5 @@
 package services;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.sql.*;
 
 public class Query {
@@ -15,17 +13,11 @@ public class Query {
     static String query23 = "SELECT system, hidden, type, count FROM (SELECT system, hidden, type, count(type) FROM doc GROUP BY system, hidden, type) count WHERE count = 1 GROUP BY system, hidden, type, count";
     static String query24 = "SELECT system, hidden, type, size, count(result) FROM (SELECT system, hidden, size, type FROM doc WHERE size BETWEEN ((SELECT max(size) FROM doc) * 0.9) AND (SELECT max(size) FROM doc) GROUP BY system, hidden, size, type) result GROUP BY system, hidden, size, type";
 
-    public static void createDB(String dbName, Connection connection) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = "CREATE DATABASE " + dbName;
-            System.out.printf("Creating database '%s'...\n", dbName);
-            statement.executeUpdate(sql);
-            System.out.printf("Database created successfully '%s'\n", dbName);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
+    /**
+     * выполнение запроса (одного из указанных в полях класса)
+     * @param connection подключение к БД
+     * @param queryCase одна из строк с запросом
+     */
     public static void createStatement(Connection connection, int queryCase) {
         try (Statement statement = connection.createStatement()) {
             System.out.println("Executing statement...");
@@ -59,7 +51,6 @@ public class Query {
                     System.out.println("Doesn't have result set");
             }
 
-            //ResultSet resultSet = statement.executeQuery(query);
             System.out.println("Retrieving data from database...");
             printResultSet(resultSet);
         } catch (SQLException ex) {
@@ -68,36 +59,20 @@ public class Query {
     }
 
     public static void printResultSet(ResultSet resultSet) throws SQLException {
-        try (FileOutputStream out = new FileOutputStream("queryResults.txt");
-             BufferedOutputStream bos = new BufferedOutputStream(out)) {
-            while (resultSet.next()) {
-                ResultSetMetaData rsmd = resultSet.getMetaData();
-                int columnsNumber = rsmd.getColumnCount();
-                while (resultSet.next()) {
-                    for (int i = 1; i <= columnsNumber; i++) {
-                        if (i > 1) System.out.print(",  ");
-                        String columnValue = resultSet.getString(i);
-                        System.out.print(columnValue + " " + rsmd.getColumnName(i));
-                    }
-                    System.out.println("");
-                }
-//                String type = resultSet.getString("type");
-//                String minimal = resultSet.getString("minimal");
-//                String maximum = resultSet.getString("maximum");
-//                String sum = resultSet.getString("sum");
-//                String average = resultSet.getString("average");
-//
-//                bos.write(("----------------------------\n").getBytes());
-//                bos.write(("Type: " + type + "\n").getBytes());
-//                bos.write(("Minimal: " + minimal + "\n").getBytes());
-//                bos.write(("Maximum: " + maximum + "\n").getBytes());
-//                bos.write(("Sum: " + sum + "\n").getBytes());
-//                bos.write(("Average: " + average + "\n").getBytes());
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            for (int i = 1; i <= columnsNumber; i++) {
+                if (i > 1) System.out.print(",  ");
+                System.out.print(rsmd.getColumnName(i));
             }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            System.out.println();
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    System.out.print(resultSet.getString(i));
+                }
+                System.out.println("");
+            }
         resultSet.close();
     }
 }

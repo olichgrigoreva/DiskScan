@@ -5,11 +5,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    static final String JDBC_DRIVER = "org.postgresql.Driver";
-    static final String DATABASE_URL = "jdbc:postgresql://localhost:5433/files";
-    static final String USER = "postgres";
-    static final String PASSWORD = "12345";
 
+    //параметры подключения к БД
+    static final String JDBC_DRIVER = "org.postgresql.Driver";
+    static final String DATABASE_URL = "jdbc:postgresql://localhost:port/files";
+    static final String USER = "username";
+    static final String PASSWORD = "password";
+
+    /**
+     * Подключение к БД
+     * @return Connection connect
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public static Connection connect() throws ClassNotFoundException, SQLException {
         System.out.println("Registering JDBC driver...");
         Class.forName(JDBC_DRIVER);
@@ -18,6 +26,10 @@ public class DBConnection {
         return connection;
     }
 
+    /**
+     * закрытие подключения с БД
+     * @param connection параметр подключения
+     */
     public static void closeConnect(Connection connection) {
         try {
             System.out.println("Closing connection and releasing resources...");
